@@ -12,17 +12,32 @@ use Symfony\Component\HttpFoundation\Request;
 class FrontController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="app_homepage")
      * @Cache(expires="+ 60 seconds", smaxage="60", maxage="60")
      * @Method({"GET"})
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $kraken = $this->get(KrakenApiService::class);
 
         return $this->render('front/index.html.twig', [
             'balances' => $kraken->getAccountBalance()->getBalanceModels(),
-            'test' => $kraken->getAssets()
+            'test' => $kraken->getServerTime()
+        ]);
+    }
+
+    /**
+     * @Route("/trades", name="app_trades")
+     * @Cache(expires="+ 60 seconds", smaxage="60", maxage="60")
+     * @Method({"GET"})
+     */
+    public function tradesAction()
+    {
+        $kraken = $this->get(KrakenApiService::class);
+        $api_trades = $kraken->getTradesHistory();
+
+        return $this->render('front/trades.html.twig', [
+            'api_trades' => $api_trades
         ]);
     }
 }

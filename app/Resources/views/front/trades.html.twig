@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Currency</th>
+                            <th>Balance</th>
+                            <th>EUR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for balance in balances %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ balance.assetName }}</td>
+                                <td>{{ balance.balance }}</td>
+                                <td>0</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
