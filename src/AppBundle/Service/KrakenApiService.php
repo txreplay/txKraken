@@ -12,12 +12,14 @@ use HanischIt\KrakenApi\KrakenApi;
 class KrakenApiService extends KrakenApi
 {
     private $em;
+    private $currService;
 
-    public function __construct($apiKey, $apiSecret, EntityManager $em)
+    public function __construct($apiKey, $apiSecret, EntityManager $em, $currService)
     {
         parent::__construct($apiKey, $apiSecret,'0','https://api.kraken.com/');
 
         $this->em = $em;
+        $this->currService = $currService;
     }
 
     public function getAssets()
@@ -41,6 +43,8 @@ class KrakenApiService extends KrakenApi
 
             $this->em->flush();
         }
+
+        return $assets;
     }
 
     public function getTradesHistory($type = 'all', $trades = false, $start = null, $end = null, $ofs = null)
@@ -55,8 +59,9 @@ class KrakenApiService extends KrakenApi
                 $trade = new Trade();
                 $trade->setTxid($item->getOrdertxid());
                 $trade->setPair($item->getPair());
-                $trade->setCurr1('null');
-                $trade->setCurr2('null');
+                $pair = $this->currService->dissociatePair($item->getPair());
+                $trade->setCurr1($pair[0]);
+                $trade->setCurr2($pair[1]);
                 $trade->setTime(new \DateTime(date('Y-m-d H:i:s', $item->getTime())));
                 $trade->setType($item->getType());
                 $trade->setOrderType($item->getOrdertype());
@@ -70,5 +75,7 @@ class KrakenApiService extends KrakenApi
 
             $this->em->flush();
         }
+
+        return $trade_history;
     }
 }

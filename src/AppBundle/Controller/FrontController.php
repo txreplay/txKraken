@@ -19,10 +19,10 @@ class FrontController extends Controller
     public function indexAction()
     {
         $kraken = $this->get(KrakenApiService::class);
+        $balances = $kraken->getAccountBalance()->getBalanceModels();
 
         return $this->render('front/index.html.twig', [
-            'balances' => $kraken->getAccountBalance()->getBalanceModels(),
-            'test' => $kraken->getServerTime()
+            'balances' => $balances,
         ]);
     }
 
@@ -34,10 +34,10 @@ class FrontController extends Controller
     public function tradesAction()
     {
         $kraken = $this->get(KrakenApiService::class);
-        $api_trades = $kraken->getTradesHistory();
+        $trades = $kraken->getTradesHistory();
 
         return $this->render('front/trades.html.twig', [
-            'api_trades' => $api_trades
+            'trades' => $trades
         ]);
     }
 }

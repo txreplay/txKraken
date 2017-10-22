@@ -3,19 +3,13 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-    <div class="jumbotron">
+    <div class="jumbotron jumbotron-fluid">
         <div class="container">
-            <h1 class="display-3">Hello, world!</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id laborum numquam sapiente soluta suscipit tempora. Ab ipsa maxime nulla vero voluptatum. Asperiores facilis nam odio officiis porro repellat soluta, ut!</p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+            <h1 class="display-3">Homepage</h1>
         </div>
     </div>
-
     <div class="container">
         <div class="row">
-            <div class="col">
-                {{ dump(test) }}
-            </div>
             <div class="col">
                 <table class="table table-bordered table-hover">
                     <thead>
@@ -30,7 +24,10 @@
                         {% for balance in balances %}
                             <tr>
                                 <th scope="row">{{ loop.index }}</th>
-                                <td>{{ balance.assetName }}</td>
+                                <td>
+                                    <img class="cryptocoins" src="{{ asset('images/cryptocoins/'~balance.assetName|cleanAsset~'.svg') }}" alt="{{ balance.assetName|cleanAsset }}">
+                                    {{ balance.assetName|cleanAsset }}
+                                </td>
                                 <td>{{ balance.balance }}</td>
                                 <td>0</td>
                             </tr>
