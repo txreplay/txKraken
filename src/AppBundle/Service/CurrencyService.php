@@ -1,8 +1,8 @@
 <?php
 
-
 namespace AppBundle\Service;
 
+use GuzzleHttp\Client;
 
 class CurrencyService
 {
@@ -45,5 +45,15 @@ class CurrencyService
             'EUR' => 'ZEUR',
             'USD' => 'ZUSD',
         ];
+    }
+
+    public function convertUsdToEur()
+    {
+        $client = new Client();
+        $request = $client->request('GET', 'http://api.fixer.io/latest?base=USD');
+
+        $result = json_decode($request->getBody()->getContents());
+
+        return $result->rates->EUR;
     }
 }
