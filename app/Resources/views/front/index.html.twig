@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Homepage</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Currency</th>
+                            <th>Balance</th>
+                            <th>Rate</th>
+                            <th>EUR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for balance in balances %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>
+                                    <img class="cryptocoins" src="{{ asset('images/cryptocoins/'~balance.assetName|cleanAsset~'.svg') }}" alt="{{ balance.assetName|cleanAsset }}">
+                                    {{ balance.assetName }}
+                                </td>
+                                <td>{{ balance.balance }}</td>
+                                <td>
+                                    {% if balance.assetName == 'ZUSD' %}
+                                        {{ '0.81'|number_format(2) }}€
+                                    {% elseif balance.assetName == 'ZEUR' %}
+                                        1.00€
+                                    {% elseif balance.assetName == 'DASH' %}
+                                        {{ ticker.getLastTradeClosed(balance.assetName~'EUR').price|number_format(2) }}€
+                                    {% elseif balance.assetName != 'ZUSD' and balance.assetName != 'ZEUR' %}
+                                        {{ ticker.getLastTradeClosed(balance.assetName~'ZEUR').price|number_format(2) }}€
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if balance.assetName == 'ZUSD' %}
+                                        {{ ('0.81' * balance.balance)|number_format(2) }}€
+                                    {% elseif balance.assetName == 'ZEUR' %}
+                                        {{ balance.balance|number_format(2) }}€
+                                    {% elseif balance.assetName == 'DASH' %}
+                                        {{ (ticker.getLastTradeClosed(balance.assetName~'EUR').price * balance.balance)|number_format(2) }}€
+                                    {% elseif balance.assetName != 'ZUSD' and balance.assetName != 'ZEUR' %}
+                                        {{ (ticker.getLastTradeClosed(balance.assetName~'ZEUR').price * balance.balance)|number_format(2) }}€
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            <tr>
+                                <td colspan="4"></td>
+                                <td><strong>{{ total_balance|number_format(2) }}€</strong></td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

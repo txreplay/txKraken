@@ -1,0 +1,30 @@
+{
+  "name": "txreplay-txcrypto",
+  "version": "1",
+  "homepage": "https://github.com/TxReplay/txcrypto",
+  "authors": [
+    "Valentin 'TxReplay' Commenge <txreplay@gmail.com>"
+  ],
+  "description": "txCrypto",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node",
+    "yui"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "izitoast": "^1.1.5",
+    "font-awesome": "^4.7.0",
+    "bootstrap": "v4.0.0-beta"
+  }
+}

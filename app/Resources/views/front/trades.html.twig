@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Trades History{% endblock %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Trades History</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered table-sm table-hover">
+                    <caption>List of trades history</caption>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>From curr.</th>
+                            <th>To curr.</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Cost</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trade in trades %}
+                            {% if trade.type == 'buy' %}
+                                {% set class = 'table-danger' %}
+                            {% else %}
+                                {% set class = 'table-success' %}
+                            {% endif %}
+                            <tr class="{{ class }}">
+                                <th scope="row">{{ trade.time|date("d/m/Y") }}</th>
+                                <td>
+                                    <img class="cryptocoins" src="{{ asset('images/cryptocoins/'~trade.curr1~'.svg') }}" alt="{{ trade.curr1 }}">
+                                    {{ trade.curr1 }}
+                                </td>
+                                <td>
+                                    <img class="cryptocoins" src="{{ asset('images/cryptocoins/'~trade.curr2~'.svg') }}" alt="{{ trade.curr2 }}">
+                                    {{ trade.curr2 }}
+                                </td>
+                                <td><strong>{{ trade.type }}</strong>/<small>{{ trade.orderType }}</small></td>
+                                <td>{{ trade.price }}€</td>
+                                <td>{{ trade.volume }}</td>
+                                <td>{{ trade.cost }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
