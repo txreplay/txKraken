@@ -18,6 +18,10 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    AppBundle\Service\CurrencyService:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+
     AppBundle\Service\KrakenApiService:
         arguments:
             $apiKey: '%kraken_api_key%'

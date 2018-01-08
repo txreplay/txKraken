@@ -53,29 +53,37 @@ class KrakenApiService extends KrakenApi
         $trade_history = $this->em->getRepository('AppBundle:Trade')->findAll();
 
         if ($parent->getCount() !== count($trade_history)) {
-            //TODO: Check differences
-
-            foreach ($parent->getTrades() as $item) {
-                $trade = new Trade();
-                $trade->setTxid($item->getOrdertxid());
-                $trade->setPair($item->getPair());
-                $pair = $this->currService->dissociatePair($item->getPair());
-                $trade->setCurr1($pair[0]);
-                $trade->setCurr2($pair[1]);
-                $trade->setTime(new \DateTime(date('Y-m-d H:i:s', $item->getTime())));
-                $trade->setType($item->getType());
-                $trade->setOrderType($item->getOrdertype());
-                $trade->setPrice($item->getPrice());
-                $trade->setCost($item->getCost());
-                $trade->setFee($item->getFee());
-                $trade->setVolume($item->getVol());
-
-                $this->em->persist($trade);
+            foreach ($trade_history as $item) {
+                $this->em->remove($item);
             }
-
             $this->em->flush();
+
+            $this->addTrades($parent);
         }
 
+
         return $trade_history;
+    }
+
+    private function addTrades($parent)
+    {
+        foreach ($parent->getTrades() as $item) {
+            $trade = new Trade();
+            $trade->setTxid($item->getOrdertxid());
+            $trade->setPair($item->getPair());
+            $pair = $this->currService->dissociatePair($item->getPair());
+            $trade->setCurr1($pair[0]);
+            $trade->setCurr2($pair[1]);
+            $trade->setTime(new \DateTime(date('Y-m-d H:i:s', $item->getTime())));
+            $trade->setType($item->getType());
+            $trade->setOrderType($item->getOrdertype());
+            $trade->setPrice($item->getPrice());
+            $trade->setCost($item->getCost());
+            $trade->setFee($item->getFee());
+            $trade->setVolume($item->getVol());
+
+            $this->em->persist($trade);
+        }
+        $this->em->flush();
     }
 }

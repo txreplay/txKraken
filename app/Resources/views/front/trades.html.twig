@@ -42,9 +42,9 @@
                                     {{ trade.curr2 }}
                                 </td>
                                 <td><strong>{{ trade.type }}</strong>/<small>{{ trade.orderType }}</small></td>
-                                <td>{{ trade.price }}€</td>
-                                <td>{{ trade.volume }}</td>
-                                <td>{{ trade.cost }}</td>
+                                <td>{{ trade.price }} €</td>
+                                <td>{{ trade.cost ~ ' ' ~ trade.curr2 }}</td>
+                                <td>{{ trade.volume ~ ' ' ~ trade.curr1}} </td>
                             </tr>
                         {% endfor %}
                     </tbody>

@@ -60,16 +60,14 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/test", name="app_test")
+     * @Route("/tracking", name="app_tracking")
      * @Cache(expires="+ 60 seconds", smaxage="60", maxage="60")
      * @Method({"GET"})
      */
-    public function testAction()
+    public function trackingAction()
     {
-        $kraken = $this->get(KrakenApiService::class);
-        $curr = $this->get(CurrencyService::class);
-        $curr->convertUsdToEur();
-
-        return true;
+        return $this->render('front/trades.html.twig', [
+            'trades' => $trades
+        ]);
     }
 }
