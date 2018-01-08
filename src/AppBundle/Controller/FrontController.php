@@ -25,12 +25,15 @@ class FrontController extends Controller
         $total_balance = $kraken->getTradeBalance('currency', 'EUR')->getEquivavlentBalance();
         $to_ticker = [];
         foreach ($balances as $balance) {
-            if ($balance->getAssetName() === 'DASH') {
-                $to_ticker[] = $balance->getAssetName().'EUR';
-            } elseif ($balance->getAssetName() !== 'ZEUR' && $balance->getAssetName() !== 'ZUSD') {
-                $to_ticker[] = $balance->getAssetName().'ZEUR';
+            if ($balance->getBalance() > 0) {
+                if ($balance->getAssetName() === 'DASH') {
+                    $to_ticker[] = $balance->getAssetName().'EUR';
+                } elseif ($balance->getAssetName() !== 'ZEUR' && $balance->getAssetName() !== 'ZUSD') {
+                    $to_ticker[] = $balance->getAssetName().'ZEUR';
+                }
             }
         }
+
         $ticker = $kraken->getTicker($to_ticker);
 
         return $this->render('front/index.html.twig', [

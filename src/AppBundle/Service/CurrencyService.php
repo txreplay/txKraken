@@ -36,6 +36,7 @@ class CurrencyService
     {
         return [
             'XBT' => 'XXBT',
+            'ZEC' => 'XZEC',
             'BTC' => 'XBTC',
             'ETH' => 'XETH',
             'ETC' => 'XETC',

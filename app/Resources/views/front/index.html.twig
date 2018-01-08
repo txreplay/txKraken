@@ -22,12 +22,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for balance in balances %}
+                        {% for balance in balances if balance.balance > 0 %}
                             <tr>
                                 <th scope="row">{{ loop.index }}</th>
                                 <td>
                                     <img class="cryptocoins" src="{{ asset('images/cryptocoins/'~balance.assetName|cleanAsset~'.svg') }}" alt="{{ balance.assetName|cleanAsset }}">
-                                    {{ balance.assetName }}
+                                    {{ balance.assetName|cleanAsset }}
                                 </td>
                                 <td>{{ balance.balance }}</td>
                                 <td>
