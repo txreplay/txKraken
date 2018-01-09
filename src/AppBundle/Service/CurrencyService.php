@@ -2,10 +2,18 @@
 
 namespace AppBundle\Service;
 
+use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Client;
 
 class CurrencyService
 {
+    private $em;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     public function dissociatePair($pair)
     {
         $crypto_list = $this->cryptoList();
@@ -34,17 +42,14 @@ class CurrencyService
 
     public function cryptoList()
     {
-        return [
-            'XBT' => 'XXBT',
-            'BTC' => 'XBTC',
-            'ETH' => 'XETH',
-            'ETC' => 'XETC',
-            'LTC' => 'XLTC',
-            'XRP' => 'XXRP',
-            'DASH' => 'DASH',
-            'EUR' => 'ZEUR',
-            'USD' => 'ZUSD',
-        ];
+        $assets = $this->em->getRepository('AppBundle:Asset')->findAll();
+
+        $cryptoList = [];
+        foreach ($assets as $asset) {
+            $cryptoList[$asset->getAltname()] = $asset->getAssetName();
+        }
+
+        return $cryptoList;
     }
 
     public function convertUsdToEur()

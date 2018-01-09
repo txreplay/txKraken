@@ -25,12 +25,15 @@ class FrontController extends Controller
         $total_balance = $kraken->getTradeBalance('currency', 'EUR')->getEquivavlentBalance();
         $to_ticker = [];
         foreach ($balances as $balance) {
-            if ($balance->getAssetName() === 'DASH') {
-                $to_ticker[] = $balance->getAssetName().'EUR';
-            } elseif ($balance->getAssetName() !== 'ZEUR' && $balance->getAssetName() !== 'ZUSD') {
-                $to_ticker[] = $balance->getAssetName().'ZEUR';
+            if ($balance->getBalance() > 0) {
+                if ($balance->getAssetName() === 'DASH') {
+                    $to_ticker[] = $balance->getAssetName().'EUR';
+                } elseif ($balance->getAssetName() !== 'ZEUR' && $balance->getAssetName() !== 'ZUSD') {
+                    $to_ticker[] = $balance->getAssetName().'ZEUR';
+                }
             }
         }
+
         $ticker = $kraken->getTicker($to_ticker);
 
         return $this->render('front/index.html.twig', [
@@ -57,16 +60,14 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/test", name="app_test")
+     * @Route("/tracking", name="app_tracking")
      * @Cache(expires="+ 60 seconds", smaxage="60", maxage="60")
      * @Method({"GET"})
      */
-    public function testAction()
+    public function trackingAction()
     {
-        $kraken = $this->get(KrakenApiService::class);
-        $curr = $this->get(CurrencyService::class);
-        $curr->convertUsdToEur();
-
-        return true;
+        return $this->render('front/trades.html.twig', [
+            'trades' => $trades
+        ]);
     }
 }
