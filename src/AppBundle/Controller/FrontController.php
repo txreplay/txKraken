@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 class FrontController extends Controller
 {
@@ -37,7 +39,7 @@ class FrontController extends Controller
 
             $ticker = $kraken->getTicker($to_ticker);
         } catch (\Exception $e) {
-            throw $this->createNotFoundException('Erreur API Kraken');
+            throw new HttpException(500, "Erreur API Kraken");
         }
 
         return $this->render('front/index.html.twig', [
@@ -59,7 +61,7 @@ class FrontController extends Controller
             $kraken = $this->get(KrakenApiService::class);
             $trades = $kraken->getTradesHistory();
         } catch (\Exception $e) {
-            throw $this->createNotFoundException('Erreur API Kraken');
+            throw new HttpException(500, "Erreur API Kraken");
         }
 
         return $this->render('front/trades.html.twig', [
