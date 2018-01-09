@@ -21,20 +21,24 @@ class FrontController extends Controller
         $kraken = $this->get(KrakenApiService::class);
         $curr = $this->get(CurrencyService::class);
 
-        $balances = $kraken->getAccountBalance()->getBalanceModels();
-        $total_balance = $kraken->getTradeBalance('currency', 'EUR')->getEquivavlentBalance();
-        $to_ticker = [];
-        foreach ($balances as $balance) {
-            if ($balance->getBalance() > 0) {
-                if ($balance->getAssetName() === 'DASH') {
-                    $to_ticker[] = $balance->getAssetName().'EUR';
-                } elseif ($balance->getAssetName() !== 'ZEUR' && $balance->getAssetName() !== 'ZUSD') {
-                    $to_ticker[] = $balance->getAssetName().'ZEUR';
+        try {
+            $balances = $kraken->getAccountBalance()->getBalanceModels();
+            $total_balance = $kraken->getTradeBalance('currency', 'EUR')->getEquivavlentBalance();
+            $to_ticker = [];
+            foreach ($balances as $balance) {
+                if ($balance->getBalance() > 0) {
+                    if ($balance->getAssetName() === 'DASH') {
+                        $to_ticker[] = $balance->getAssetName().'EUR';
+                    } elseif ($balance->getAssetName() !== 'ZEUR' && $balance->getAssetName() !== 'ZUSD') {
+                        $to_ticker[] = $balance->getAssetName().'ZEUR';
+                    }
                 }
             }
-        }
 
-        $ticker = $kraken->getTicker($to_ticker);
+            $ticker = $kraken->getTicker($to_ticker);
+        } catch (\Exception $e) {
+            throw $this->createNotFoundException('Erreur API Kraken');
+        }
 
         return $this->render('front/index.html.twig', [
             'balances' => $balances,
@@ -51,8 +55,12 @@ class FrontController extends Controller
      */
     public function tradesAction()
     {
-        $kraken = $this->get(KrakenApiService::class);
-        $trades = $kraken->getTradesHistory();
+        try {
+            $kraken = $this->get(KrakenApiService::class);
+            $trades = $kraken->getTradesHistory();
+        } catch (\Exception $e) {
+            throw $this->createNotFoundException('Erreur API Kraken');
+        }
 
         return $this->render('front/trades.html.twig', [
             'trades' => $trades
@@ -66,8 +74,6 @@ class FrontController extends Controller
      */
     public function trackingAction()
     {
-        return $this->render('front/trades.html.twig', [
-            'trades' => $trades
-        ]);
+        return $this->render('front/trades.html.twig', []);
     }
 }
